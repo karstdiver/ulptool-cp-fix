@@ -111,52 +111,61 @@ def main(argv):
     #sys.stderr.write("args.b: %s\n\r\n\r" % args.b)
     #sys.stderr.write("args.j: %s\n\r\n\r" % args.j)
 
+    ## get source filenames to be copied from
     try:
         #sys.stdout.write('\n\r\r\r\r*BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB*\r\n\n\n')
         PATHS['source']    = args.j  # dec-2021 for .s files copy from {build.source.path} to {build.path}
         ext = ('.s')  # ulp assembly filename suffix by convention
-        source_path_sketch = PATHS['source']  # get source dir path
+        source_path_sketch = PATHS['source']  # get source dir path as passed in from platform.local.txt
         os.chdir(source_path_sketch)  # make {build.source.path} the working directory
-        ulp_files_path = []           # will contain list of full pathname .s files for copy
+        ulp_source_files_path = []           # will contain list of full pathname .s files for copy
         ulp_files = glob.glob('*.s')  # get all *.s files in working directory
         for i, ulp_file in enumerate(ulp_files):  # loop over each .s file
             #print(os.path.join(PATHS['source'], ulp_file))
-            ulp_files_path.append(os.path.join(source_path_sketch, ulp_file))  # creating full pathname to .s file
+            ulp_source_files_path.append(os.path.join(source_path_sketch, ulp_file))  # creating full pathname to .s file
 
-        #sys.stderr.write("ulp_files_path: %s\n\r\n\r" % ulp_files_path)
+        #sys.stderr.write("ulp_source_files_path: %s\n\r\n\r" % ulp_source_files_path)
 
-        # when here ulp_files_path should contain list of full pathname *.s files to be copied to build dir
+        # when here ulp_source_files_path should contain list of full pathname *.s files to be copied to build dir
 
         print('source dir files: ' + source_path_sketch)
         print(os.listdir(source_path_sketch))  # print all files in source dir
 
     except:
-        sys.stderr.write('Error: Cannot create sketch *.s file list\n')
+        sys.stderr.write('Error: Cannot create sketch directory\'s *.s file listing.\n')
         sys.exit(1)  # abandon build
 
+    ## get destination filenames to be copied to
     try:
         #sys.stdout.write('\n\r\r\r\r*CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC*\r\n\n\n')
-        build_path = PATHS['source']  # get build dir path
-        os.chdir(build_path)  # make {build.path} the working directory
+        build_path = PATHS['build']  # get build dir path as passed in from platform.local.txt
         build_path_sketch = os.path.join(PATHS['build'], 'sketch')  # form .s dest directory
         #print(os.path.join(PATHS['build'], 'sketch'))
 
-        for ulp_file in ulp_files_path:  # for each .s file in source dir
+        for ulp_source_file in ulp_source_files_path:  # for each .s file in source dir
 
-            # check and delete existing .s in build dir
-            ulp_filename = ulp_file.split('/')[-1]  # form dest 'filename.s' to check existance
-            print("\n\n\n"+ ulp_filename + "\n\n\n")
-            if os.path.isfile(ulp_filename):  # check for existing file in dest dir note cwd
-                os.remove(ulp_filename)  # remove dest file; replace with copy below
+            # get filename.s from source pathname
+            path, ulp_source_filename = os.path.split(ulp_source_file)
+            #print("\n\n\n Copying "+ ulp_source_filename + "...\n\n\n") # should be just filename.s
 
-            shutil.copy(ulp_file, build_path_sketch)  # copy source full pathname to dest directory
+            # form destination full pathname
+            ulp_build_file = os.path.join(build_path_sketch, ulp_source_filename)
+
+            # delete dest file if exists
+            if os.path.isfile(ulp_build_file):  # check for existing file in dest dir note cwd
+                os.remove(ulp_build_file)  # remove dest file; replace with copy below
+
+            # copy from source file to destination file
+            shutil.copy(ulp_source_file, ulp_build_file)  # copy source full pathname to dest directory
+            print("\n\nCopied " + ulp_source_file + " to " + ulp_build_file + "\n\n")
 
         # when here each {build.source.path}/*.s file has been copied into {build.path}/sketch
 
         print('build dir files: ' + build_path_sketch)
         print(os.listdir(build_path_sketch))  # print all files in build dir (should have .s files)
+
     except:
-        sys.stderr.write('Error: Unable to copy *.s files\n')
+        sys.stderr.write('Error: Unable to copy *.s files into destination build directory\n')
         sys.exit(1)  # abandon build
 
     #sys.stdout.write('\n\r\r\r\r*DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD*\r\n\n')
@@ -377,7 +386,7 @@ def gen_assembly(PATHS):
                         ulpcc_files.append(file)
 
     except Exception as e:
-        print e
+        print(e)
 
 
     for file in ulpcc_files:
@@ -389,7 +398,7 @@ def gen_assembly(PATHS):
             sys.exit(error_string)
         else:
             if out == "":
-                print cmd[0]
+                printcmd[0])
             else:
                 sys.exit(str(out))
 
