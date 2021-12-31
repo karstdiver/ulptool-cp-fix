@@ -114,6 +114,7 @@ def main(argv):
     ## get source filenames to be copied from
     try:
         #sys.stdout.write('\n\r\r\r\r*BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB*\r\n\n\n')
+                                     # dec-2021 see the shell cmd line in platform.local.txt  -j option
         PATHS['source']    = args.j  # dec-2021 for .s files copy from {build.source.path} to {build.path}
         ext = ('.s')  # ulp assembly filename suffix by convention
         source_path_sketch = PATHS['source']  # get source dir path as passed in from platform.local.txt

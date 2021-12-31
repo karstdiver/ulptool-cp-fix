@@ -21,7 +21,7 @@ compiler.cpp.extra_flags="-I{tools.ulptool.path}/include/ulptool"
 
 ## compile '.s' (ulp) files
 #recipe.hooks.core.postbuild.01.pattern=bash -c date;{compiler.s.cmd} {compiler.cpreprocessor.flags} -b {build.path} -p {runtime.platform.path} -u {compiler.ulp.path} -x {compiler.path} -t {tools.ulptool.path} --DF_CPU={build.f_cpu} --DARDUINO={runtime.ide.version} --DARDUINO_={build.board} --DARDUINO_ARCH_={build.arch} --DARDUINO_BOARD="{build.board}" --DARDUINO_VARIANT="{build.variant}"
-recipe.hooks.core.postbuild.01.pattern={compiler.s.cmd} {compiler.cpreprocessor.flags} -s {build.source.path} -b {build.path} -p {runtime.platform.path} -u {compiler.ulp.path} -x {compiler.path} -t {tools.ulptool.path} --DF_CPU={build.f_cpu} --DARDUINO={runtime.ide.version} --DARDUINO_={build.board} --DARDUINO_ARCH_={build.arch} --DARDUINO_BOARD="{build.board}" --DARDUINO_VARIANT="{build.variant}"
+recipe.hooks.core.postbuild.01.pattern={compiler.s.cmd} {compiler.cpreprocessor.flags} -j {build.source.path} -b {build.path} -p {runtime.platform.path} -u {compiler.ulp.path} -x {compiler.path} -t {tools.ulptool.path} --DF_CPU={build.f_cpu} --DARDUINO={runtime.ide.version} --DARDUINO_={build.board} --DARDUINO_ARCH_={build.arch} --DARDUINO_BOARD="{build.board}" --DARDUINO_VARIANT="{build.variant}"
 #recipe.hooks.core.postbuild.01.pattern={compiler.s.cmd} {compiler.cpreprocessor.flags} -b {build.path} -p {runtime.platform.path} -u {compiler.ulp.path} -x {compiler.path} -t {tools.ulptool.path} --DF_CPU={build.f_cpu} --DARDUINO={runtime.ide.version} --DARDUINO_={build.board} --DARDUINO_ARCH_={build.arch} --DARDUINO_BOARD="{build.board}" --DARDUINO_VARIANT="{build.variant}"
 
 ## run esp32.ld linker script through c preprocessor
